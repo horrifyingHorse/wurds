@@ -31,3 +31,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.wurd::first-letter {
+  text-transform: capitalize;
+}

@@ -17,6 +17,7 @@ module.exports = {
   safelist: [
     'h-16', 'h-20', 'h-30', 'h-40', 'h-50', 'h-60',
     'w-10', 'w-20', 'w-30', 'w-40', 'w-50', 'w-60',
+    'px-8', 'pr-6'
     // Add more as needed
   ],
 

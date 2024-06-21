@@ -9,26 +9,33 @@ export async function GET(req, {params}) {
 
     let returnJSON = {
       'homonym': data.length > 1 ? true : false,
-      'data': []
+      'word': data[0].word,
+      'phonetic': '',
+      'data': {}
     }
+    
+    data.forEach((wordEl) => {
+      wordEl.meanings.forEach(el=> {
+        if (!(el.partOfSpeech in returnJSON.data)) returnJSON.data[el.partOfSpeech] = []
 
-    data.forEach((wordEl, index) => {
-      returnJSON.data.push({
-        'word': wordEl.word,
-        'phonetic': '',
-        'meanings': {}
+        let primaryObj = {}
+        Object.keys(el)
+          .slice(1)
+          .forEach( key => primaryObj[key] = el[key] )
+
+        returnJSON.data[el.partOfSpeech].push(primaryObj)
       })
 
       wordEl.phonetics.forEach(el => {
-        if('text' in el && returnJSON.data[index].phonetic == '') {
-          returnJSON.data[index].phonetic = el.text
+        if('text' in el && returnJSON.phonetic == '') {
+          returnJSON.phonetic = el.text
         }
       });
     })
 
     return res.json(returnJSON)
   } catch {
-    return res.json({error: 'err'})
+    return res.json({error: 'Ignorant API Response'})
   }
   
 }

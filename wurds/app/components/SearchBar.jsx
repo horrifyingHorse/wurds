@@ -38,6 +38,7 @@ export function SearchBar (props) {
           className={styleClass}
           type="text"
           placeholder="callous"
+          onChange={(e) => props.wurdUpdate(e.target.value)}
 
           layout
           variants={SearchVariants}
