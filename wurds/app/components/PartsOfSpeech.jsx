@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect, } from "react"
 
 function decToRoman (num) {
   if (num >= 1 && num <= 3) return "I".repeat(num)
@@ -28,32 +28,26 @@ function GlowText ({ text, func, index, custStyle }) {
   )
 }
 
-export function PartsOfSpeech ({ parts, func}) {
+export function PartsOfSpeech ({ parts }) {
   const isHomonym = parts.homonym
-  const [ homonym, setHomonym ] = useState(0)
+  const keys = Object.keys(parts.data)
+  const [ tab, setTab ] = useState(keys[0])
+
+  useEffect (() => {
+    setTab(keys[0]);
+  }, [parts])
 
   return (
-    <>
-      { isHomonym && 
-        <div className="flex"> {
-          parts.data.map((el, index) => 
-            <GlowText 
-              text={decToRoman(index + 1)}
-              func={(i) => setHomonym(i)}
-              index={index}
-              custStyle="w-20 mx-2 flex justify-center cursor-pointer"
-            />)
-      } </div> } 
-
-      <div className="flex"> {
-        parts.data.map((el, index) => el.meanings.map((part, childIndex) => 
-          <GlowText text={part.partOfSpeech} func={func}/>
-        ))
-      } </div>
-      
-      <div className="flex">
-        huh?  {homonym}
-      </div>
-    </>
+  <>
+    <div className="flex"> {
+      keys.map(txt => 
+        <GlowText text={txt} index={txt} func={(i) => setTab(i)}/>
+      )
+    } </div>
+    
+    <div className="flex">
+      Tab {tab} : {parts.data[tab] ? parts.data[tab][0]['definitions'][0]['definition'] : setTab(keys[0])}
+    </div>
+  </>
   )
 }

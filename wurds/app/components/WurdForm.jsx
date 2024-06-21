@@ -5,14 +5,11 @@ import { PartsOfSpeech } from "./PartsOfSpeech.jsx"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 
-function Display (props) {
-  if (!props.data) return (<></>)
+function Display ({ data }) {
+  if (!data) return (<></>)
 
   const [ index, setIndex ] = useState(0)
-  
-  let inf = []
 
-  const data = props.data.data[0]
   const wurdVariants = {
     init: {
       y: -40,
@@ -41,15 +38,6 @@ function Display (props) {
         duration: 0.5,
       }
     }
-  }
-
-  const setDisplay = (i) => {
-    setIndex(i)
-    console.log(i)
-  }
-
-  const updateDisplay = (info) =>{ 
-    inf.push(info)
   }
 
   return (
@@ -94,7 +82,7 @@ function Display (props) {
         </motion.div>
 
         <div classame="flex" cassName="w-40 h-20 flex justify-center items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
-          <PartsOfSpeech parts={props.data} func={setDisplay} upfunc={updateDisplay}/>
+          <PartsOfSpeech parts={data} />
         </div>
 
       </motion.div>
