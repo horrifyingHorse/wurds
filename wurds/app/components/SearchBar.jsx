@@ -1,7 +1,10 @@
 'use client'
 import { motion } from "framer-motion"
+import { useRef } from "react"
 
 export function SearchBar (props) {
+  const inRef = useRef(null)
+
   const SearchVariants = {
     init: {
       scale: 1
@@ -31,14 +34,20 @@ export function SearchBar (props) {
   const divH = "h-16"// `h-${props.h ? props.h : 10}`
   const divW = "w-50px"// `w-${props.w ? props.w : 60}`
 
+  const selectAll = () => {
+    inRef.current && inRef.current.select()
+  }
+
   return (
     <>
     <div className={`${divH} ${divW}`}>
         <motion.input 
+          ref={inRef}
           className={styleClass}
           type="text"
           placeholder="callous"
           onChange={(e) => props.wurdUpdate(e.target.value)}
+          onFocus={selectAll}
 
           layout
           variants={SearchVariants}
