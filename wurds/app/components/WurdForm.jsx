@@ -41,11 +41,11 @@ function Display ({ data }) {
   }
 
   return (
-    <div className="ml-0 sm:ml-16 mr-0 sm:mr-16 mt-5 w-svh">
+    <div className="mx-0 sm:mx-16 mt-5 w-svh">
 
       <motion.div 
         layout
-        className="sm:ml-16 text-center sm:text-left"
+        className="sm:mx-16 text-center sm:text-left"
 
         initial="init"
         animate="loadin"
@@ -73,7 +73,7 @@ function Display ({ data }) {
 
         <motion.div 
           layout 
-          className="mt-2 text-lg italic" 
+          className="mt-2 text-lg italic font-extralight" 
           
           key={data.phonetic} 
           variants={proVariants}
