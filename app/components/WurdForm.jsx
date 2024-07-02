@@ -8,8 +8,6 @@ import { motion } from "framer-motion"
 function Display ({ data }) {
   if (!data) return (<></>)
 
-  const [ index, setIndex ] = useState(0)
-
   const wurdVariants = {
     init: {
       y: -40,
@@ -19,9 +17,7 @@ function Display ({ data }) {
     loadin: {
       y: 0,
       opacity: 1,
-      transition: {
-        duration: 0.5,
-      }
+      transition: { duration: 0.5, }
     }
   } 
   const proVariants = {
@@ -41,11 +37,11 @@ function Display ({ data }) {
   }
 
   return (
-    <div className="mx-0 sm:mx-16 mt-5 w-svh">
+    <div className="mx-0 p-2 md:pd-0 md:mx-16 mt-5 w-svh">
 
       <motion.div 
         layout
-        className="sm:mx-16 text-center sm:text-left"
+        className="md:mx-16 text-center md:text-left"
 
         initial="init"
         animate="loadin"
@@ -81,7 +77,7 @@ function Display ({ data }) {
           {data.phonetic}
         </motion.div>
 
-        <div classame="flex" cassName="w-40 h-20 flex justify-center items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
+        <div>
           <PartsOfSpeech parts={data} />
         </div>
 
@@ -96,7 +92,6 @@ function Display ({ data }) {
 }
 
 export function WurdInfoDisplay() {
-  const [i, setI] = useState(0)
   const [ wurd, setWurd] = useState('')
   const [ data, setData ] = useState(null)
 
@@ -111,29 +106,23 @@ export function WurdInfoDisplay() {
     } catch {
       setData({'Error': 'Ignorant API response'})
     } 
-    // finally {
-    //   console.log(data)
-    // }
-
   }
 
-  return (
-    <>
-      <div className="h-svh w-svh">
-        <div className="h-1/5"></div>
+  return (<>
+    <div className="h-svh w-svh">
+      <div className="h-1/5"></div>
 
-        <div className="flex justify-center">
-          <form onSubmit={wurdSub}>
-            <SearchBar
-              style="rounded-3xl" 
-              wurdUpdate={ (word) => setWurd(word) }
-            />
-          </form>
-        </div>
-
-        <Display data={data}/>
-
+      <div className="flex justify-center">
+        <form onSubmit={wurdSub}>
+          <SearchBar
+            style="rounded-3xl" 
+            wurdUpdate={ (word) => setWurd(word) }
+          />
+        </form>
       </div>
-    </>
-  )
+
+      <Display data={data}/>
+
+    </div>
+  </>)
 }
