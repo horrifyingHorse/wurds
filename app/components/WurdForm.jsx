@@ -4,6 +4,7 @@ import { SearchBar } from "./SearchBar.jsx"
 import { PartsOfSpeech } from "./PartsOfSpeech.jsx"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { TextCarousel } from "./TextCarouself.jsx"
 
 function Display ({ data }) {
   if (!data) return (<></>)
@@ -91,9 +92,34 @@ function Display ({ data }) {
   )
 }
 
+async function getRandomWords() {
+  try {
+    return await fetch("api/wurd?quant=5", {cache: 'force-cache'})
+      .then((response) => response.json())
+    const wordList = await response.json()
+    return await wordList
+
+  } catch (e) {
+    console.log(e)
+    return([])
+  }
+}
+
 export function WurdInfoDisplay() {
   const [ wurd, setWurd] = useState('')
+  const [ randomWords, setRandomWords] = useState([])
   const [ data, setData ] = useState(null)
+
+  // const wurds = getRandomWords().then(json => json)
+
+  useEffect(()=>{
+    fetch("api/wurd?quant=5", {cache: "reload"})
+      .then((res) => res.json())
+      .then((data) => {
+        setRandomWords(data)
+      })
+  }, [])
+
 
   const wurdSub = async (event) => {
     event.preventDefault()
@@ -110,7 +136,9 @@ export function WurdInfoDisplay() {
 
   return (<>
     <div className="h-svh w-svh">
-      <div className="h-1/5"></div>
+      <div className="h-1/6">
+        <TextCarousel text={randomWords} />
+      </div>
 
       <div className="flex justify-center">
         <form onSubmit={wurdSub}>
