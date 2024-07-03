@@ -1,3 +1,5 @@
+const { Cedarville_Cursive } = require('next/font/google');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -12,6 +14,10 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+
+      fontFamily: {
+        Cedarville: ["Cedarville Cursive"],
+      }
     },
   },
   safelist: [
@@ -20,7 +26,6 @@ module.exports = {
     'px-8', 'pr-6',
     'hidden', 'text-slate-50', 'text-transparent',
     'bg-green-300', 'bg-transparent'
-    // Add more as needed
   ],
 
   plugins: [],
