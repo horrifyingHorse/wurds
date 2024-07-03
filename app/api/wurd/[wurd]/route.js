@@ -7,6 +7,11 @@ export async function GET(req, {params}) {
     const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${wurd}`)
     const data = await response.json()
 
+    if (data.title)
+      return res.json({
+        'title': 'wurd Not Found'
+      })
+
     let returnJSON = {
       'homonym': data.length > 1 ? true : false,
       'word': data[0].word,
