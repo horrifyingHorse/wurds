@@ -174,7 +174,7 @@ export function PartsOfSpeech ({ parts }) {
   }, [parts])
 
   return ( <>
-    <div className="flex flex-wrap md:justify-start justify-center"> {
+    <div className="flex flex-wrap md:justify-start justify-center sticky top-0 z-10 bg-black"> {
       keys.map(txt => <div>
         <GlowText text={txt} index={txt} func={(i) => setTab(i)}/>
         { tab == txt 
