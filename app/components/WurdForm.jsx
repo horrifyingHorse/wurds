@@ -136,7 +136,7 @@ export function WurdInfoDisplay() {
 
   return (<>
     <div className="h-svh w-svh">
-      <div className="h-1/6">
+      <div className="h-1/6 font-Cedarville">
         <TextCarousel text={randomWords} />
       </div>
 
