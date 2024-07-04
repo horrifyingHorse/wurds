@@ -1,8 +1,9 @@
 'use client'
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
+import { useThisWord } from "../hooks/useThisWord"
 
-function TextContainer ({ text, k}) {
+function TextContainer ({ text, k, nwc}) {
   
   const variant = {
     init: {
@@ -32,7 +33,8 @@ function TextContainer ({ text, k}) {
       text.map((el, index) => 
        index == k ? 
         <motion.div
-          className={`text-gray-500 absolute text-5xl`}
+          className={`text-gray-500 absolute text-5xl cursor-pointer`}
+          onClick={() => nwc(el)}
 
           key={k}
           variants={variant}
@@ -50,6 +52,7 @@ function TextContainer ({ text, k}) {
 
 export function TextCarousel({ text }) {
   const [ index, setIndex ] = useState(0)
+  const { newWurdClicked } = useThisWord()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,7 +66,7 @@ export function TextCarousel({ text }) {
 
   return(
     <div className="flex justify-center items-center w-full h-full">
-      <TextContainer text={text} k={index} />
+      <TextContainer text={text} k={index} nwc={newWurdClicked} />
     </div>
   )
 }

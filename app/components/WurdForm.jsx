@@ -113,19 +113,6 @@ export function WurdInfoDisplay() {
       })
   }, [])
 
-
-  // const wurdSub = async (event) => {
-  //   event.preventDefault()
-
-  //   try {
-  //     const response = await fetch(`/api/wurd/${wurd}`)
-  //     const data = await response.json()
-  //     setData(data)
-  //   } catch {
-  //     setData({'Error': 'Ignorant API response'})
-  //   } 
-  // }
-
   return (<>
     {console.log(wurd)}
     <div className="h-svh w-svh">

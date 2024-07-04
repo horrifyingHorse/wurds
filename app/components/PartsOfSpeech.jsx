@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useTime } from "framer-motion"
 import { GlowButton } from "./GlowButton.jsx"
 import { newWord, word } from "../store/myatoms.js"
 import { useWurdSub } from "../hooks/useWurdSub.js"
+import { useThisWord } from "../hooks/useThisWord.js"
 
 let globalWord = ''
 // background-image: linear-gradient(to right, #a743ff, #925bff, #7e6cff, #6d7aff, #6185ff, #9083f8, #b281f0, #cc81e6, #fa78c2, #ff7c9a, #ff8e75, #ffa65a);
@@ -217,27 +218,13 @@ export function PartsOfSpeech ({ parts }) {
   const isHomonym = parts.homonym
   const keys = Object.keys(parts.data)
   const [ tab, setTab ] = useState(keys[0])
-
-  const [ , setWurd ] = useAtom(newWord)
-  const { wurdSub } = useWurdSub()
-  const [ i, setI ] = useState(false)
+  const { newWurdClicked } = useThisWord()
 
   globalWord = parts.word
 
   useEffect (() => {
     setTab(keys[0]);
   }, [parts])
-  
-  const newWurdClicked = (wurd) => {
-    setWurd(wurd);
-    setI(!i);
-  }
-
-  useEffect(()=> {
-    console.log("this effect")
-    wurdSub()
-  }, [i])
-
 
   return ( 
     <>
@@ -257,7 +244,7 @@ export function PartsOfSpeech ({ parts }) {
           { keys.map(k => <Definition def={parts.data[k]} tab={tab} k={k} />) }
         </div>
 
-        <div className="text-center md:text-left w-full md:w-1/4">
+        <div className="px-10 sm:px-28 md:px-0 text-center md:text-left w-full md:w-1/4">
           { keys.map(k => 
             <ExtrasInfo 
               def={parts.data[k]} 
