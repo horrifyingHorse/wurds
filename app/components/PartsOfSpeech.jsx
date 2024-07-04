@@ -1,8 +1,11 @@
 'use client'
 
 import { useState, useEffect, } from "react"
+import { useAtom } from "jotai"
+import { motion, AnimatePresence, useTime } from "framer-motion"
 import { GlowButton } from "./GlowButton.jsx"
-import { motion, AnimatePresence } from "framer-motion"
+import { newWord, word } from "../store/myatoms.js"
+import { useWurdSub } from "../hooks/useWurdSub.js"
 
 let globalWord = ''
 // background-image: linear-gradient(to right, #a743ff, #925bff, #7e6cff, #6d7aff, #6185ff, #9083f8, #b281f0, #cc81e6, #fa78c2, #ff7c9a, #ff8e75, #ffa65a);
@@ -18,17 +21,20 @@ function decToRoman (num) {
 
 function ItaliciseWord({ ex }) {
   let wurd = globalWord
+
   if (ex.indexOf(wurd) == -1)  
     wurd = globalWord.charAt(0).toUpperCase() + globalWord.slice(1)
 
   const split = ex.split(wurd)
 
-  return ( <>
-    { split.map((el , index) => <>
-      {el} 
-      { index < split.length - 1 && <span className="font-bold italic text-white">{wurd}</span> }
-    </> ) }
-  </> )
+  return ( 
+    <>
+      { split.map((el , index) => <>
+        {el} 
+        { index < split.length - 1 && <span className="font-bold italic text-white">{wurd}</span> }
+        </> ) }
+    </> 
+  )
 }
 
 function GlowText ({ text, func, index, custStyle }) {
@@ -87,7 +93,7 @@ function ExpandDetails ({index, def, alreadyRen, tab}) {
               </div> }
           </div>
         </div>
-        ) } 
+    )} 
     </motion.div>
     </AnimatePresence>
   }
@@ -101,31 +107,39 @@ function ExpandDetails ({index, def, alreadyRen, tab}) {
   </> )
 }
 
+function DefinitionItem({item, mx, indx, subIndx}) {
+  return (
+    <div className="flex text-xl">
+                  
+      <div className="w-10 text-center font-extralight">
+        { Number(mx) == 1 ? `${Number(indx) + 1}.` : 
+          Number(subIndx) == 0 ? '1.' : null }  
+      </div>
+
+      <div className="mb-3 text-left">
+        { item['definition'] } 
+        { 'example' in item &&
+          <div className="text-gray-400"> 
+            <span className='font-extralight'>Example:&nbsp;</span> 
+            { <ItaliciseWord ex={item['example']} /> }
+          </div> }
+      </div>
+    </div>
+  )
+}
+
 function Definition ({ def, tab, k }) {
   const meanings = def.length
   const maxOnDisplay = meanings == 1 ? 2 : 1
 
-  return ( <> { 
-    def.map((el, index) => <> 
+  return ( <> 
+    { def.map((el, index) => 
       <div className={`${tab == k ? "block" : "hidden"}`}>
         { el['definitions']
           .slice(0, maxOnDisplay)
-          .map((definition, subIndex) => <div className="flex text-xl">
-            
-            <div className="w-10 text-center font-extralight">
-              { maxOnDisplay == 1 ? `${index + 1}.` : 
-                subIndex == 0 ? '1.' : null }  
-            </div>
-
-            <div className="mb-3 text-left">
-              { definition['definition'] } 
-              { 'example' in definition &&
-                <div className="text-gray-400"> 
-                  <span className='font-extralight'>Example:</span> { <ItaliciseWord ex={definition['example']}  /> }
-                </div> }
-            </div>
-
-          </div> )
+          .map((definition, subIndex) => 
+            <DefinitionItem item={definition} mx={maxOnDisplay} subIndex={subIndex} indx={index}/>
+          )
         } 
       
         <div> { 
@@ -135,30 +149,67 @@ function Definition ({ def, tab, k }) {
         } </div>
       
       </div>
-    </> ) 
-  } </> )
+    )}
+  </> )
 }
 
-function ExtrasInfo({ def, tab, k }) {
-  return (<>
-    { def[0].synonyms.length && tab == k ? <div className="mb-6">
-      <div className="text-xl font-bold text-violet-300 mb-3 cursor-default">Synonyms:</div>
-      <div className="flex flex-wrap justify-center md:justify-start">
-        { def[0].synonyms.map(el => 
-          <div className="text-center text-sm border-2 border-violet-300 mb-2 mr-1 p-2 rounded-full cursor-pointer hover:border-violet-400 transition">{el}</div> 
-        )}
-      </div>
-    </div> : null }
+function ExtrasInfo({ def, tab, k, nwc}) {
 
-    { def[0].antonyms.length && tab == k ? <div className="mb-6">
-      <div className="text-xl font-bold text-red-300 mb-3 cursor-default">Antonyms:</div>
-      <div className="flex flex-wrap justify-center md:justify-start">
-        { def[0].antonyms.map(el => 
-          <div className="text-center text-sm border-2 border-red-300 mr-1 p-2 rounded-full cursor-pointer hover:border-red-400 transition">{el}</div>
-        )}
-      </div>
-    </div> : null }
-  </>)
+  const variantsCSS = {
+    wrap1: "text-xl font-bold mb-3 cursor-default",
+    wrap2: "flex flex-wrap justify-center md:justify-start",
+    wrap3: "text-center text-sm border-2 mb-2 mr-1 p-2 rounded-full cursor-pointer transition"
+  }
+
+  const synonymCSS = {
+    color: "text-violet-300",
+    border: "border-violet-300 hover:border-violet-400"
+  }
+
+  const antonymCSS = {
+    color: "text-red-300",
+    border: "border-red-300 hover:border-red-400"
+  }
+
+  return (
+    <>
+      { def[0].synonyms.length && tab == k 
+        ? <div className="mb-6">
+            <div className={`${synonymCSS.color} ${variantsCSS.wrap1}`}>Synonyms:</div>
+            <div className={`${variantsCSS.wrap2}`}>
+              { def[0].synonyms.map(el => 
+                <div 
+                  className={`${variantsCSS.wrap3} ${synonymCSS.border}`}
+                  onClick={() => nwc(el)}
+                >
+                  {el}
+                </div> 
+              )}
+            </div>
+          </div> 
+
+        : null 
+      }
+
+      { def[0].antonyms.length && tab == k 
+        ? <div className="mb-6">
+            <div className={`${antonymCSS.color} ${variantsCSS.wrap1}`}>Antonyms:</div>
+            <div className={`${variantsCSS.wrap2}`}>
+              { def[0].antonyms.map(el => 
+                <div 
+                  className={`${variantsCSS.wrap3} ${antonymCSS.border}`}
+                  onClick={() => nwc(el)}
+                >
+                  {el}
+                </div>
+              )}
+            </div>
+          </div> 
+
+        : null 
+      }
+    </>
+  )
 }
 
 
@@ -167,30 +218,57 @@ export function PartsOfSpeech ({ parts }) {
   const keys = Object.keys(parts.data)
   const [ tab, setTab ] = useState(keys[0])
 
+  const [ , setWurd ] = useAtom(newWord)
+  const { wurdSub } = useWurdSub()
+  const [ i, setI ] = useState(false)
+
   globalWord = parts.word
 
   useEffect (() => {
     setTab(keys[0]);
   }, [parts])
+  
+  const newWurdClicked = (wurd) => {
+    setWurd(wurd);
+    setI(!i);
+  }
 
-  return ( <>
-    <div className="flex flex-wrap md:justify-start justify-center sticky top-0 z-10 bg-black"> {
-      keys.map(txt => <div>
-        <GlowText text={txt} index={txt} func={(i) => setTab(i)}/>
-        { tab == txt 
-        ? <motion.div layout layoutId="underline" className="h-1 bg-green-200 w-4/5" />
-        : null }
-      </div> )
-    } </div>
-    
-    <div className="mt-3 block md:space-x-5 md:flex">
-      <div className="w-full md:w-3/4">
-        { keys.map(k => <Definition def={parts.data[k]} tab={tab} k={k} />) }
-      </div>
+  useEffect(()=> {
+    console.log("this effect")
+    wurdSub()
+  }, [i])
 
-      <div className="text-center md:text-left w-full md:w-1/4">
-        { keys.map(k => <ExtrasInfo def={parts.data[k]} tab={tab} k={k} />) }
+
+  return ( 
+    <>
+      <div className="flex flex-wrap md:justify-start justify-center sticky top-0 z-10 bg-black"> {
+        keys.map(txt => 
+          <div>
+            <GlowText text={txt} index={txt} func={(i) => setTab(i)}/>
+            { tab == txt 
+              ? <motion.div layout layoutId="underline" className="h-1 bg-green-200 w-4/5" />
+              : null }
+          </div> 
+        )
+      } </div>
+      
+      <div className="mt-3 block md:space-x-5 md:flex">
+        <div className="w-full md:w-3/4">
+          { keys.map(k => <Definition def={parts.data[k]} tab={tab} k={k} />) }
+        </div>
+
+        <div className="text-center md:text-left w-full md:w-1/4">
+          { keys.map(k => 
+            <ExtrasInfo 
+              def={parts.data[k]} 
+              tab={tab} 
+              k={k} 
+              nwc={newWurdClicked}
+            />
+
+          ) }
+        </div>
       </div>
-    </div>
-  </> )
+    </> 
+  )
 }

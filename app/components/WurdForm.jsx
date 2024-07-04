@@ -1,8 +1,11 @@
 'use client'
 
+import { useState, useEffect } from "react"
+import { useAtom } from "jotai"
+import { word, newWord, wordData, newWordData } from "../store/myatoms.js"
+import { useWurdSub } from "../hooks/useWurdSub.js"
 import { SearchBar } from "./SearchBar.jsx"
 import { PartsOfSpeech } from "./PartsOfSpeech.jsx"
-import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { TextCarousel } from "./TextCarouself.jsx"
 
@@ -77,12 +80,12 @@ function Display ({ data }) {
         >
           {data.phonetic}
         </motion.div>
-
-        <div>
-          <PartsOfSpeech parts={data} />
-        </div>
-
+      
       </motion.div>
+
+      <div className="md:mx-16 mx-0">
+        <PartsOfSpeech parts={data} />
+      </div>
 
       <div className="flex">
 
@@ -92,25 +95,15 @@ function Display ({ data }) {
   )
 }
 
-async function getRandomWords() {
-  try {
-    return await fetch("api/wurd?quant=5", {cache: 'force-cache'})
-      .then((response) => response.json())
-    const wordList = await response.json()
-    return await wordList
-
-  } catch (e) {
-    console.log(e)
-    return([])
-  }
-}
-
 export function WurdInfoDisplay() {
-  const [ wurd, setWurd] = useState('')
+  const [ wurd ] = useAtom(word)
+  const [, setWurd ] = useAtom(newWord)
+  
   const [ randomWords, setRandomWords] = useState([])
-  const [ data, setData ] = useState(null)
+  const [ data ] = useAtom(wordData)
+  const [ , setData ] = useAtom(newWordData)
 
-  // const wurds = getRandomWords().then(json => json)
+  const { wurdSub } = useWurdSub()
 
   useEffect(()=>{
     fetch("api/wurd?quant=5", {cache: "reload"})
@@ -121,30 +114,30 @@ export function WurdInfoDisplay() {
   }, [])
 
 
-  const wurdSub = async (event) => {
-    event.preventDefault()
+  // const wurdSub = async (event) => {
+  //   event.preventDefault()
 
-    try {
-      const response = await fetch(`/api/wurd/${wurd}`)
-      const data = await response.json()
-
-      setData(data)
-    } catch {
-      setData({'Error': 'Ignorant API response'})
-    } 
-  }
+  //   try {
+  //     const response = await fetch(`/api/wurd/${wurd}`)
+  //     const data = await response.json()
+  //     setData(data)
+  //   } catch {
+  //     setData({'Error': 'Ignorant API response'})
+  //   } 
+  // }
 
   return (<>
+    {console.log(wurd)}
     <div className="h-svh w-svh">
       <div className="h-1/6 font-Cedarville">
         <TextCarousel text={randomWords} />
       </div>
 
       <div className="flex justify-center">
-        <form onSubmit={wurdSub}>
+        <form onSubmit={(event) => {event.preventDefault(); wurdSub()}}>
           <SearchBar
             style="rounded-3xl" 
-            wurdUpdate={ (word) => setWurd(word) }
+            wurdUpdate={ (word) => { setWurd(word); }}
           />
         </form>
       </div>
