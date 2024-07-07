@@ -1,7 +1,7 @@
 import { useAtom } from "jotai"
 import { useWurdSub } from "./useWurdSub"
 import { useState, useEffect } from "react"
-import { newWord, word } from "../store/myatoms"
+import { newWord, word, wordCommit } from "../store/myatoms"
 
 export function useThisWord() {
   const [ searchWurd ] = useAtom(word)
@@ -25,4 +25,18 @@ export function useThisWord() {
   }, [i])
   
   return { newWurdClicked }
+}
+
+export function useCommitWord() {
+  const [ theWord ] = useAtom(word)
+  const [ , SetCommitWord ] = useAtom(wordCommit)
+
+  const commit = (customWord='') => {
+    if (customWord)
+      SetCommitWord(customWord)
+    else
+      SetCommitWord(theWord)
+  }
+
+  return commit
 }
