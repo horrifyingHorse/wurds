@@ -1,5 +1,7 @@
 import { atom } from "jotai";
 
+export const globalLoading = atom(false)
+
 export const word = atom('')
 export const newWord = atom(
   null,
@@ -7,6 +9,7 @@ export const newWord = atom(
     set(word, Nword)
   }
 )
+export const wordCommit = atom('')
 
 export const wordData = atom(null)
 export const newWordData = atom(
