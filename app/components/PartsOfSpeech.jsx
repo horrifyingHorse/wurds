@@ -1,11 +1,8 @@
 'use client'
 
 import { useState, useEffect, } from "react"
-import { useAtom } from "jotai"
-import { motion, AnimatePresence, useTime } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { GlowButton } from "./GlowButton.jsx"
-import { newWord, word } from "../store/myatoms.js"
-import { useWurdSub } from "../hooks/useWurdSub.js"
 import { useThisWord } from "../hooks/useThisWord.js"
 
 let globalWord = ''
@@ -139,7 +136,7 @@ function Definition ({ def, tab, k }) {
         { el['definitions']
           .slice(0, maxOnDisplay)
           .map((definition, subIndex) => 
-            <DefinitionItem item={definition} mx={maxOnDisplay} subIndex={subIndex} indx={index}/>
+            <DefinitionItem item={definition} mx={maxOnDisplay} subIndx={subIndex} indx={index}/>
           )
         } 
       
@@ -158,7 +155,7 @@ function ExtrasInfo({ def, tab, k, nwc}) {
 
   const variantsCSS = {
     wrap1: "text-xl font-bold mb-3 cursor-default",
-    wrap2: "flex flex-wrap justify-center md:justify-start",
+    wrap2: "flex flex-wrap justify-center lg:justify-start",
     wrap3: "text-center text-sm border-2 mb-2 mr-1 p-2 rounded-full cursor-pointer transition"
   }
 
@@ -173,9 +170,9 @@ function ExtrasInfo({ def, tab, k, nwc}) {
   }
 
   return (
-    <>
+    <div className="flex flex-wrap lg:flex-col sm:flex-row flex-col justify-center">
       { def[0].synonyms.length && tab == k 
-        ? <div className="mb-6">
+        ? <div className="mb-6 w-full sm:w-1/2 lg:w-full">
             <div className={`${synonymCSS.color} ${variantsCSS.wrap1}`}>Synonyms:</div>
             <div className={`${variantsCSS.wrap2}`}>
               { def[0].synonyms.map(el => 
@@ -193,7 +190,7 @@ function ExtrasInfo({ def, tab, k, nwc}) {
       }
 
       { def[0].antonyms.length && tab == k 
-        ? <div className="mb-6">
+        ? <div className="mb-6 w-full sm:w-1/2 lg:w-full">
             <div className={`${antonymCSS.color} ${variantsCSS.wrap1}`}>Antonyms:</div>
             <div className={`${variantsCSS.wrap2}`}>
               { def[0].antonyms.map(el => 
@@ -209,7 +206,7 @@ function ExtrasInfo({ def, tab, k, nwc}) {
 
         : null 
       }
-    </>
+    </div>
   )
 }
 
@@ -228,7 +225,7 @@ export function PartsOfSpeech ({ parts }) {
 
   return ( 
     <>
-      <div className="flex flex-wrap md:justify-start justify-center sticky top-0 z-10 bg-black"> {
+      <div className="flex flex-wrap md:justify-start justify-center sticky top-0 z-10 bg-black ml-10 lg:ml-0"> {
         keys.map(txt => 
           <div>
             <GlowText text={txt} index={txt} func={(i) => setTab(i)}/>
@@ -239,12 +236,12 @@ export function PartsOfSpeech ({ parts }) {
         )
       } </div>
       
-      <div className="mt-3 block md:space-x-5 md:flex">
-        <div className="w-full md:w-3/4">
+      <div className="mt-3 block lg:space-x-5 lg:flex ml-0 md:ml-10 lg:ml-0">
+        <div className="w-full lg:w-3/4">
           { keys.map(k => <Definition def={parts.data[k]} tab={tab} k={k} />) }
         </div>
 
-        <div className="px-10 sm:px-28 md:px-0 text-center md:text-left w-full md:w-1/4">
+        <div className="px-10 sm:px-14 lg:px-0 text-center lg:text-left w-full lg:w-1/4">
           { keys.map(k => 
             <ExtrasInfo 
               def={parts.data[k]} 
