@@ -34,10 +34,6 @@ export function SearchBar (props) {
   const divH = "h-16"// `h-${props.h ? props.h : 10}`
   const divW = "w-50px"// `w-${props.w ? props.w : 60}`
 
-  const selectAll = () => {
-    inRef.current && inRef.current.select()
-  }
-
   return (
     <>
     <div className={`${divH} ${divW}`}>
@@ -47,7 +43,10 @@ export function SearchBar (props) {
           type="text"
           placeholder="callous"
           onChange={(e) => props.wurdUpdate(e.target.value)}
-          onFocus={selectAll}
+          onFocus={(e) => {
+            inRef.current && inRef.current.select()
+            props.wurdUpdate(e.target.value)
+          }}
 
           layout
           variants={SearchVariants}
