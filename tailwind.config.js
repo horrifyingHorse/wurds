@@ -1,4 +1,4 @@
-const { Cedarville_Cursive } = require('next/font/google');
+const { Cedarville_Cursive, Dosis } = require('next/font/google');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -17,6 +17,7 @@ module.exports = {
 
       fontFamily: {
         Cedarville: ["Cedarville Cursive"],
+        Dosis: ["Dosis"]
       }
     },
   },
