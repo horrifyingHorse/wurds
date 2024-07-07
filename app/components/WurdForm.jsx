@@ -2,15 +2,25 @@
 
 import { useState, useEffect } from "react"
 import { useAtom } from "jotai"
-import { word, newWord, wordData, newWordData } from "../store/myatoms.js"
+import { word, newWord, wordData, newWordData, globalLoading } from "../store/myatoms.js"
 import { useWurdSub } from "../hooks/useWurdSub.js"
 import { SearchBar } from "./SearchBar.jsx"
 import { PartsOfSpeech } from "./PartsOfSpeech.jsx"
 import { motion } from "framer-motion"
 import { TextCarousel } from "./TextCarouself.jsx"
+import { ErrorMsg } from "./WurdNotFound.jsx"
+import { useCommitWord } from "../hooks/useThisWord.js"
 
 function Display ({ data }) {
   if (!data) return (<></>)
+  
+  if (data.title) {
+    return(
+      <>
+        <ErrorMsg />
+      </>
+    )
+  }
 
   const wurdVariants = {
     init: {
@@ -41,11 +51,11 @@ function Display ({ data }) {
   }
 
   return (
-    <div className="mx-0 p-2 md:pd-0 md:mx-16 mt-5 w-svh">
+    <div className="mt-5 mx-0 md:mx-16 p-2 lg:pd-0 w-svh">
 
       <motion.div 
         layout
-        className="md:mx-16 text-center md:text-left"
+        className="lg:mx-16 text-center lg:text-left"
 
         initial="init"
         animate="loadin"
@@ -83,7 +93,7 @@ function Display ({ data }) {
       
       </motion.div>
 
-      <div className="md:mx-16 mx-0">
+      <div className="lg:mx-16 mx-0">
         <PartsOfSpeech parts={data} />
       </div>
 
@@ -104,6 +114,9 @@ export function WurdInfoDisplay() {
   const [ , setData ] = useAtom(newWordData)
 
   const { wurdSub } = useWurdSub()
+  const commitWord = useCommitWord()
+
+  const [ loading ] = useAtom(globalLoading)
 
   useEffect(()=>{
     fetch("api/wurd?quant=5", {cache: "reload"})
@@ -121,7 +134,7 @@ export function WurdInfoDisplay() {
       </div>
 
       <div className="flex justify-center">
-        <form onSubmit={(event) => {event.preventDefault(); wurdSub()}}>
+        <form onSubmit={(event) => {event.preventDefault(); wurdSub(); commitWord()}}>
           <SearchBar
             style="rounded-3xl" 
             wurdUpdate={ (word) => { setWurd(word); }}
@@ -129,7 +142,11 @@ export function WurdInfoDisplay() {
         </form>
       </div>
 
-      <Display data={data}/>
+      {
+        !loading
+        ? <Display data={data}/>
+        : "loading"
+      }
 
     </div>
   </>)
