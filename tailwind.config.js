@@ -17,7 +17,8 @@ module.exports = {
 
       fontFamily: {
         Cedarville: ["Cedarville Cursive"],
-        Dosis: ["Dosis"]
+        Dosis: ["Dosis"],
+        Zain: ["Zain"]
       }
     },
   },
