@@ -1,6 +1,6 @@
 'use client'
 
-import { WurdInfoDisplay } from "../components/WurdForm.jsx"
+import { WurdInfoDisplay } from "@/app/components/new/WurdForm.jsx"
 import { Provider, createStore } from "jotai"
 
 // https://datamuse.com/api/
