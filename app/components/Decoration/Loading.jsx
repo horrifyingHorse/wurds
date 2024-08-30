@@ -15,6 +15,7 @@ export function Wload() {
     if (isPresent) {
       const theLoadAnim = async () => {
         await animate("#rotate", { opacity: [0, 1], scale: [0, 1] }, {duration: 0.3, type: "spring"})
+        if (!scope.current) return
         animate("span", {opacity: 1})
   
         for (let item = 1; item < revolvingItems + 1; item++) {

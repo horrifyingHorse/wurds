@@ -142,6 +142,19 @@ export function WurdInfoDisplay() {
         </form>
       </div>
 
+
+
+      {/* -> for end Anim: <AnimatePresence>
+        { loading
+          ? <div className="absolute w-full z-50"><div className="text-5xl flex justify-center pt-20">
+              <Wload />
+            </div>
+            </div>
+          : null
+        }
+      </AnimatePresence>
+      { !loading ? <Display data={data}/> : null } */}
+
       {
         !loading
         ? <Display data={data}/>

@@ -41,12 +41,23 @@ export function ErrorMsg() {
 
         Did you mean?
         <div className="ml-9">
+        {/* for end anim:  <AnimatePresence>
+          { loading
+          ? <div className="absolute z-50"><div className="text-5xl flex justify-center pt-20">
+                <Wload />
+              </div>
+            </div>
+            : null
+          }
+        </AnimatePresence>
+        { loading 
+          ? null */}
         { loading 
           ? <div className="text-5xl flex justify-center pt-20">
               <Wload />
             </div>
           : simWurd.map((el, index) => {
-              if (el.score < 100 && index > 4) return(null)
+              if (el.score < 100 || index > 4) return(null)
                 
               return (
                <div> 
