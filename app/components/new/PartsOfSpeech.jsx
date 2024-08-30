@@ -172,17 +172,22 @@ function ExtrasInfo({ def, tab, k, nwc}) {
   return (
     <div className="flex flex-wrap lg:flex-col sm:flex-row flex-col justify-center">
       { def[0].synonyms.length && tab == k 
-        ? <div className="mb-6 w-full sm:w-1/2 lg:w-full">
+        ? def[0].synonyms.length == 1 && def[0].synonyms[0].toLowerCase() == globalWord.toLowerCase()
+        ? null
+        : <div className="mb-6 w-full sm:w-1/2 lg:w-full">
             <div className={`${synonymCSS.color} ${variantsCSS.wrap1}`}>Synonyms:</div>
             <div className={`${variantsCSS.wrap2}`}>
-              { def[0].synonyms.map(el => 
-                <div 
-                  className={`${variantsCSS.wrap3} ${synonymCSS.border}`}
-                  onClick={() => {nwc(el); commitWord(el)}}
-                >
-                  {el}
-                </div> 
-              )}
+              { def[0].synonyms.map(el => {
+                if (el.toLowerCase() == globalWord.toLowerCase()) return null
+                return (
+                  <div 
+                    className={`${variantsCSS.wrap3} ${synonymCSS.border}`}
+                    onClick={() => {nwc(el); commitWord(el)}}
+                  >
+                    {el}
+                  </div>
+                )
+              })}
             </div>
           </div> 
 
