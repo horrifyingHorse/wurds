@@ -20,6 +20,7 @@ module.exports = {
         Dosis: ["Dosis"],
         Zain: ["Zain"],
         Bebas: ["Bebas Neue"],
+        Raleway: ["Raleway"],
       }
     },
   },
