@@ -15,14 +15,13 @@ With:
 
 `Wurds` is the fastest way to obtain information about an English word, right after every single online platform and the Dictionary.
 
-## Implemented Using:
+## Tech Stack:
 - React
 - Next.js
 - framer-motion
 - Jotai
+- Figma
   
 ## Where is wurds?
 You can access the project @ [wurds.callous.cloud](wurds.callous.cloud) || [callous.vercel.app](callous.vercel.app)
 <br/><br/>
-
-`This project is an non-declarative & integral part of Project 2025 (I had a nightmare)`
